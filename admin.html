@@ -99,11 +99,15 @@
           autocomplete="off"
         >
 
-        <input
-          id="eventDate"
-          type="date"
-          aria-label="Іс-шара күні"
-        >
+       <div class="date-field">
+  <span id="dateLabel">Күнді таңдаңыз</span>
+  <input
+    id="eventDate"
+    type="date"
+    aria-label="Іс-шара күні"
+    onchange="updateDateLabel()"
+  >
+</div>
 
       </div>
 
@@ -587,5 +591,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script src="admin.js?v=5"></script>
 
+  <script>
+function updateDateLabel() {
+  const input = document.getElementById('eventDate');
+  const label = document.getElementById('dateLabel');
+
+  if (!input || !label) return;
+
+  if (input.value) {
+    const [year, month, day] = input.value.split('-');
+    label.textContent = `${day}.${month}.${year}`;
+  } else {
+    label.textContent = 'Күнді таңдаңыз';
+  }
+}
+</script>
+  
 </body>
 </html>
