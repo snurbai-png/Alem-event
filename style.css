@@ -94,3 +94,38 @@
     white-space:nowrap;
   }
 }
+/* Admin date input fix */
+#eventDate{
+  width:100%;
+  min-height:54px;
+  border:1px solid #ded9cf;
+  border-radius:12px;
+  padding:14px 16px;
+  font-size:16px;
+  background:#fff;
+  color:#292b24;
+}
+
+#eventDate::-webkit-date-and-time-value{
+  text-align:left;
+}
+
+#eventDate::-webkit-calendar-picker-indicator{
+  opacity:.65;
+}
+/* Admin logout button mobile fix */
+@media(max-width:650px){
+  .admin-head{
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:start;
+    gap:12px;
+  }
+
+  .admin-head .outline-btn{
+    margin-top:12px;
+    padding:9px 16px;
+    white-space:nowrap;
+    font-size:13px;
+  }
+}
