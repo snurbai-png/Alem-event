@@ -204,3 +204,87 @@ function pick(obj,names){const keys=Object.keys(obj);for(const n of names){const
 async function importExcel(){const file=$('excelFile').files[0];if(!file){$('importMsg').textContent='Excel файлын таңдаңыз.';return}if(!eventId)return;$('importMsg').textContent='Файл оқылуда…';try{const data=await file.arrayBuffer();const wb=XLSX.read(data,{type:'array'});const sheet=wb.Sheets[wb.SheetNames[0]];const raw=XLSX.utils.sheet_to_json(sheet,{defval:''});const rows=raw.map(o=>({event_id:eventId,full_name:pick(o,['Аты-жөні','Аты жөні','аты-жөні','full_name','name','ФИО','Қонақ']),table_number:pick(o,['Үстел №','Үстел','үстел №','table_number','table','Стол','Стол №'])})).filter(x=>x.full_name&&x.table_number);if(!rows.length)throw new Error('Бағандар табылмады');$('importMsg').textContent=`${rows.length} қонақ табылды. Жүктелуде…`;await insertGuests(rows);$('excelFile').value='';$('importMsg').textContent=`${rows.length} қонақ сәтті қосылды ✓`;await loadGuests()}catch(e){console.error(e);$('importMsg').textContent='Файлды оқу мүмкін болмады. Бағандар «Аты-жөні» және «Үстел №» болсын.'}}
 async function removeGuest(id){if(!confirm('Қонақты өшіру керек пе?'))return;try{const r=await fetch(`${SUPABASE_URL}/rest/v1/guests?id=eq.${id}&event_id=eq.${eventId}`,{method:'DELETE',headers:apiHeaders()});if(!r.ok)throw new Error(await r.text());await loadGuests()}catch(e){alert('Өшіру мүмкін болмады.')}}
 $('password')?.addEventListener('keydown',e=>{if(e.key==='Enter')login()});$('eventCreateForm')?.addEventListener('submit',e=>{e.preventDefault();createEvent()});if(accessToken){setView(true);loadEvents()}else setView(false);
+
+function getAdminLang(){
+  return localStorage.getItem('alem_admin_language') || 'kk';
+}
+
+function adminMsg(key){
+  const lang = getAdminLang();
+  return adminMessages?.[lang]?.[key] || adminMessages?.kk?.[key] || '';
+}
+
+function refreshGuestListLanguage(){
+  if(typeof filterGuests === 'function'){
+    filterGuests();
+  }
+}
+function guestUI(lang = getAdminLang()){
+  const ui = {
+    kk: {
+      save: "Сақтау",
+      edit: "Өзгерту",
+      delete: "Өшіру",
+      empty: "Қонақ табылмады",
+      found: n => `${n} қонақ табылды`
+    },
+    ru: {
+      save: "Сохранить",
+      edit: "Изменить",
+      delete: "Удалить",
+      empty: "Гость не найден",
+      found: n => `Найдено гостей: ${n}`
+    },
+    en: {
+      save: "Save",
+      edit: "Edit",
+      delete: "Delete",
+      empty: "Guest not found",
+      found: n => `Guests found: ${n}`
+    }
+  };
+
+  return ui[lang] || ui.kk;
+}
+function renderLocalized(rows){
+  const t = guestUI();
+
+  $('guestCount').textContent = `(${guestRows.length})`;
+
+  $('list').innerHTML = rows.length
+    ? rows.map(x => `
+      <div class="guest-row" id="guest-${Number(x.id)}">
+        <div class="guest-info">
+          <span>${esc(x.full_name)} <b>№${esc(x.table_number)}</b></span>
+
+          <div class="edit-panel" id="edit-${Number(x.id)}">
+            <input
+              id="edit-name-${Number(x.id)}"
+              value="${esc(x.full_name)}">
+
+            <input
+              id="edit-table-${Number(x.id)}"
+              value="${esc(x.table_number)}">
+
+            <button onclick="saveGuest(${Number(x.id)})">
+              ${t.save}
+            </button>
+          </div>
+        </div>
+
+        <div class="guest-actions">
+          <button
+            class="edit-btn"
+            onclick="toggleEdit(${Number(x.id)})">
+            ${t.edit}
+          </button>
+
+          <button onclick="removeGuest(${Number(x.id)})">
+            ${t.delete}
+          </button>
+        </div>
+      </div>
+    `).join('')
+    : `<div class="empty">${t.empty}</div>`;
+}
+render = renderLocalized;
