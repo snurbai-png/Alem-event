@@ -1,1 +1,221 @@
-<!doctype html><html lang="kk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ALEM EVENT</title><link rel="stylesheet" href="style.css?v=7"></head><body><header><b>ALEM <small>EVENT</small></b><a href="admin.html">Admin</a></header><main><section class="hero"><i>ALEM EVENT · GUEST EXPERIENCE</i><h1>Қош келдіңіз!</h1><p>QR-кодты сканерлеп, аты-жөніңізді енгізіңіз. Өз үстеліңізді бір сәтте табыңыз.</p><div class="box"><input id="q" placeholder="Аты-жөніңізді енгізіңіз"><button onclick="findGuest()">Үстелімді табу</button><div id="result"></div></div></section><section class="steps"><div><em>01</em><h3>QR-код</h3><p>Кіреберістегі QR-кодты сканерлеңіз.</p></div><div><em>02</em><h3>Атыңызды жазыңыз</h3><p>Іздеу жолағына аты-жөніңізді енгізіңіз.</p></div><div><em>03</em><h3>Үстеліңізді табыңыз</h3><p>Үстел нөмірі экранда бірден шығады.</p></div></section><section class="more"><h2>Кештен ләззат алыңыз.<br>Қалғанын біз ойластырдық.</h2><p>Зал жоспары · Мәзір · Бағдарлама · Фото</p></section></main><footer>ALEM EVENT · ALMATY</footer><script src="app.js?v=7"></script></body></html>
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ALEM EVENT</title>
+  <link rel="stylesheet" href="style.css?v=7">
+</head>
+
+<body>
+
+<header>
+  <b>ALEM <small>EVENT</small></b>
+
+  <div class="lang-switcher">
+    <button type="button" onclick="setLanguage('kk')" id="lang-kk">ҚАЗ</button>
+    <button type="button" onclick="setLanguage('ru')" id="lang-ru">РУС</button>
+    <button type="button" onclick="setLanguage('en')" id="lang-en">ENG</button>
+  </div>
+
+  <a href="admin.html">Admin</a>
+</header>
+
+<main>
+
+<section class="hero">
+
+  <i>ALEM EVENT · GUEST EXPERIENCE</i>
+
+  <h1 id="welcome">Қош келдіңіз!</h1>
+
+  <p id="heroText">
+    QR-кодты сканерлеп, аты-жөніңізді енгізіңіз.
+    Өз үстеліңізді бір сәтте табыңыз.
+  </p>
+
+  <div class="box">
+
+    <input
+      id="q"
+      placeholder="Аты-жөніңізді енгізіңіз"
+    >
+
+    <button id="findBtn" onclick="findGuest()">
+      Үстелімді табу
+    </button>
+
+    <div id="result"></div>
+
+  </div>
+
+</section>
+
+
+<section class="steps">
+
+  <div>
+    <em>01</em>
+    <h3 id="step1Title">QR-код</h3>
+    <p id="step1Text">
+      Кіреберістегі QR-кодты сканерлеңіз.
+    </p>
+  </div>
+
+  <div>
+    <em>02</em>
+    <h3 id="step2Title">Атыңызды жазыңыз</h3>
+    <p id="step2Text">
+      Іздеу жолағына аты-жөніңізді енгізіңіз.
+    </p>
+  </div>
+
+  <div>
+    <em>03</em>
+    <h3 id="step3Title">Үстеліңізді табыңыз</h3>
+    <p id="step3Text">
+      Үстел нөмірі экранда бірден шығады.
+    </p>
+  </div>
+
+</section>
+
+
+<section class="more">
+
+  <h2 id="moreTitle">
+    Кештен ләззат алыңыз.<br>
+    Қалғанын біз ойластырдық.
+  </h2>
+
+  <p id="moreText">
+    Зал жоспары · Мәзір · Бағдарлама · Фото
+  </p>
+
+</section>
+
+</main>
+
+
+<footer>
+  ALEM EVENT · ALMATY
+</footer>
+
+
+<script>
+
+const translations = {
+
+  kk: {
+    welcome: "Қош келдіңіз!",
+    heroText: "QR-кодты сканерлеп, аты-жөніңізді енгізіңіз. Өз үстеліңізді бір сәтте табыңыз.",
+    placeholder: "Аты-жөніңізді енгізіңіз",
+    find: "Үстелімді табу",
+
+    step1Title: "QR-код",
+    step1Text: "Кіреберістегі QR-кодты сканерлеңіз.",
+
+    step2Title: "Атыңызды жазыңыз",
+    step2Text: "Іздеу жолағына аты-жөніңізді енгізіңіз.",
+
+    step3Title: "Үстеліңізді табыңыз",
+    step3Text: "Үстел нөмірі экранда бірден шығады.",
+
+    moreTitle: "Кештен ләззат алыңыз.<br>Қалғанын біз ойластырдық.",
+    moreText: "Зал жоспары · Мәзір · Бағдарлама · Фото"
+  },
+
+
+  ru: {
+    welcome: "Добро пожаловать!",
+    heroText: "Отсканируйте QR-код и введите своё имя. Найдите свой стол за несколько секунд.",
+    placeholder: "Введите имя и фамилию",
+    find: "Найти мой стол",
+
+    step1Title: "QR-код",
+    step1Text: "Отсканируйте QR-код у входа.",
+
+    step2Title: "Введите своё имя",
+    step2Text: "Введите имя и фамилию в строку поиска.",
+
+    step3Title: "Найдите свой стол",
+    step3Text: "Номер вашего стола сразу появится на экране.",
+
+    moreTitle: "Наслаждайтесь вечером.<br>Остальное мы уже продумали.",
+    moreText: "План зала · Меню · Программа · Фото"
+  },
+
+
+  en: {
+    welcome: "Welcome!",
+    heroText: "Scan the QR code and enter your name. Find your table in seconds.",
+    placeholder: "Enter your full name",
+    find: "Find my table",
+
+    step1Title: "QR Code",
+    step1Text: "Scan the QR code at the entrance.",
+
+    step2Title: "Enter your name",
+    step2Text: "Enter your full name in the search field.",
+
+    step3Title: "Find your table",
+    step3Text: "Your table number will appear instantly.",
+
+    moreTitle: "Enjoy the evening.<br>We've taken care of the rest.",
+    moreText: "Floor plan · Menu · Program · Photos"
+  }
+
+};
+
+
+function setLanguage(lang) {
+
+  localStorage.setItem("alem_language", lang);
+
+  document.documentElement.lang = lang;
+
+  const t = translations[lang];
+
+  document.getElementById("welcome").innerHTML = t.welcome;
+  document.getElementById("heroText").innerHTML = t.heroText;
+
+  document.getElementById("q").placeholder = t.placeholder;
+  document.getElementById("findBtn").innerHTML = t.find;
+
+  document.getElementById("step1Title").innerHTML = t.step1Title;
+  document.getElementById("step1Text").innerHTML = t.step1Text;
+
+  document.getElementById("step2Title").innerHTML = t.step2Title;
+  document.getElementById("step2Text").innerHTML = t.step2Text;
+
+  document.getElementById("step3Title").innerHTML = t.step3Title;
+  document.getElementById("step3Text").innerHTML = t.step3Text;
+
+  document.getElementById("moreTitle").innerHTML = t.moreTitle;
+  document.getElementById("moreText").innerHTML = t.moreText;
+
+
+  document.querySelectorAll(".lang-switcher button")
+    .forEach(btn => btn.classList.remove("active"));
+
+  document.getElementById("lang-" + lang)
+    .classList.add("active");
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const savedLanguage =
+    localStorage.getItem("alem_language") || "kk";
+
+  setLanguage(savedLanguage);
+
+});
+
+</script>
+
+
+<script src="app.js?v=7"></script>
+
+</body>
+</html>
