@@ -1,12 +1,591 @@
-<!doctype html><html lang="kk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ALEM EVENT Admin</title><link rel="stylesheet" href="style.css"></head><body><header><b>ALEM <small>EVENT</small></b><a href="index.html">Қонақ беті</a></header><main class="admin-main">
-<section id="loginCard" class="admin-card"><div class="admin-kicker">ALEM EVENT · ADMIN</div><h1>Admin кіру</h1><p class="muted">Supabase-та жасаған email мен парольді енгізіңіз.</p><input id="email" type="email" autocomplete="username" placeholder="Email"><input id="password" type="password" autocomplete="current-password" placeholder="Пароль"><button id="loginBtn" onclick="login()">Кіру</button><div id="loginMsg" class="admin-msg"></div></section>
-<section id="adminPanel" style="display:none"><div class="admin-head"><div><div class="admin-kicker">ALEM EVENT · ADMIN</div><h1>Іс-шаралар</h1><p class="muted">Іс-шараны таңдаңыз немесе жаңасын құрыңыз.</p></div><button class="outline-btn" onclick="logout()">Шығу</button></div>
-<div class="admin-card"><label class="field-label">Іс-шара</label><select id="eventSelect" onchange="selectEvent()"></select><form id="eventCreateForm"><div class="two-col"><input id="eventName" placeholder="Іс-шара атауы" autocomplete="off"><input id="eventDate" type="date" aria-label="Іс-шара күні"></div><button id="createEventBtn" type="submit">+ Жаңа іс-шара құру</button></form><div id="eventMsg" class="admin-msg"></div></div>
-<div id="eventTools" style="display:none"><div class="admin-card"><div class="admin-kicker">ТАҢДАЛҒАН ІС-ШАРА</div><h2 id="currentEventName" class="event-title"></h2><p id="currentEventMeta" class="muted"></p><div class="qr-wrap"><div id="qrcode"></div><div class="qr-actions"><button class="secondary-btn" onclick="copyGuestLink()">Қонақ сілтемесін көшіру</button><button class="secondary-btn" onclick="downloadQR()">QR-кодты сақтау</button><button class="danger-btn" onclick="deleteEvent()">Іс-шараны өшіру</button></div></div><div id="deleteEventMsg" class="admin-msg"></div></div>
-<div class="admin-card"><h2 class="section-title">Зал жоспары</h2><p class="muted small">Таңдалған іс-шараға зал жоспарының суретін жүктеңіз. Қонақ үстелін тапқан кезде осы жоспарды көре алады.</p><input id="hallPlanFile" type="file" accept="image/jpeg,image/png,image/webp"><button onclick="uploadHallPlan()">Зал жоспарын жүктеу</button><div id="hallPlanMsg" class="admin-msg"></div><div id="hallPlanPreview" class="hall-plan-preview" style="display:none"><img id="hallPlanPreviewImg" alt="Зал жоспары"></div></div>
-<div class="admin-card"><h2 class="section-title">Excel жүктеу</h2><p class="muted small">Excel бағандары: <b>Аты-жөні</b> және <b>Үстел №</b>. .xlsx, .xls немесе .csv болады.</p><input id="excelFile" type="file" accept=".xlsx,.xls,.csv"><button onclick="importExcel()">Excel-ден қонақтарды қосу</button><div id="importMsg" class="admin-msg"></div></div>
-<div class="admin-card"><h2 class="section-title">Қонақты қолмен қосу</h2><input id="n" placeholder="Аты-жөні"><input id="t" placeholder="Үстел №"><button onclick="addGuest()">Қосу</button><div id="actionMsg" class="admin-msg"></div></div>
-<div class="admin-card guest-search-card"><h2 class="section-title">Қонақты іздеу</h2><p class="muted small">Аты-жөнін жазыңыз. Табылған қонақтың аты мен үстел нөмірін өзгертуге болады.</p><input id="guestSearch" placeholder="Қонақтың аты-жөні" autocomplete="off" oninput="filterGuests()"><div id="searchMsg" class="admin-msg"></div></div>
-<div class="list-head"><h2 class="section-title">Қонақтар <span id="guestCount"></span></h2></div><div id="list" class="guest-list"></div></div>
-</section></main>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script><script src="admin.js?v=4"></script></body></html>
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ALEM EVENT Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <b>ALEM <small>EVENT</small></b>
+
+  <div class="lang-switcher">
+    <button type="button" onclick="setAdminLanguage('kk')" id="admin-lang-kk">ҚАЗ</button>
+    <button type="button" onclick="setAdminLanguage('ru')" id="admin-lang-ru">РУС</button>
+    <button type="button" onclick="setAdminLanguage('en')" id="admin-lang-en">ENG</button>
+  </div>
+
+  <a href="index.html" id="guestPageLink">Қонақ беті</a>
+</header>
+
+<main class="admin-main">
+
+<section id="loginCard" class="admin-card">
+
+  <div class="admin-kicker">ALEM EVENT · ADMIN</div>
+
+  <h1 id="loginTitle">Admin кіру</h1>
+
+  <p class="muted" id="loginDescription">
+    Supabase-та жасаған email мен парольді енгізіңіз.
+  </p>
+
+  <input
+    id="email"
+    type="email"
+    autocomplete="username"
+    placeholder="Email"
+  >
+
+  <input
+    id="password"
+    type="password"
+    autocomplete="current-password"
+    placeholder="Пароль"
+  >
+
+  <button id="loginBtn" onclick="login()">Кіру</button>
+
+  <div id="loginMsg" class="admin-msg"></div>
+
+</section>
+
+
+<section id="adminPanel" style="display:none">
+
+  <div class="admin-head">
+
+    <div>
+      <div class="admin-kicker">ALEM EVENT · ADMIN</div>
+
+      <h1 id="eventsTitle">Іс-шаралар</h1>
+
+      <p class="muted" id="eventsDescription">
+        Іс-шараны таңдаңыз немесе жаңасын құрыңыз.
+      </p>
+    </div>
+
+    <button
+      class="outline-btn"
+      onclick="logout()"
+      id="logoutBtn">
+      Шығу
+    </button>
+
+  </div>
+
+
+  <div class="admin-card">
+
+    <label class="field-label" id="eventLabel">
+      Іс-шара
+    </label>
+
+    <select
+      id="eventSelect"
+      onchange="selectEvent()">
+    </select>
+
+    <form id="eventCreateForm">
+
+      <div class="two-col">
+
+        <input
+          id="eventName"
+          placeholder="Іс-шара атауы"
+          autocomplete="off"
+        >
+
+        <input
+          id="eventDate"
+          type="date"
+          aria-label="Іс-шара күні"
+        >
+
+      </div>
+
+      <button
+        id="createEventBtn"
+        type="submit">
+        + Жаңа іс-шара құру
+      </button>
+
+    </form>
+
+    <div id="eventMsg" class="admin-msg"></div>
+
+  </div>
+
+
+  <div id="eventTools" style="display:none">
+
+
+    <div class="admin-card">
+
+      <div
+        class="admin-kicker"
+        id="selectedEventLabel">
+        ТАҢДАЛҒАН ІС-ШАРА
+      </div>
+
+      <h2
+        id="currentEventName"
+        class="event-title">
+      </h2>
+
+      <p
+        id="currentEventMeta"
+        class="muted">
+      </p>
+
+
+      <div class="qr-wrap">
+
+        <div id="qrcode"></div>
+
+        <div class="qr-actions">
+
+          <button
+            class="secondary-btn"
+            onclick="copyGuestLink()"
+            id="copyGuestLinkBtn">
+            Қонақ сілтемесін көшіру
+          </button>
+
+          <button
+            class="secondary-btn"
+            onclick="downloadQR()"
+            id="downloadQRBtn">
+            QR-кодты сақтау
+          </button>
+
+          <button
+            class="danger-btn"
+            onclick="deleteEvent()"
+            id="deleteEventBtn">
+            Іс-шараны өшіру
+          </button>
+
+        </div>
+
+      </div>
+
+      <div
+        id="deleteEventMsg"
+        class="admin-msg">
+      </div>
+
+    </div>
+
+
+    <div class="admin-card">
+
+      <h2
+        class="section-title"
+        id="hallPlanTitle">
+        Зал жоспары
+      </h2>
+
+      <p
+        class="muted small"
+        id="hallPlanDescription">
+        Таңдалған іс-шараға зал жоспарының суретін жүктеңіз.
+        Қонақ үстелін тапқан кезде осы жоспарды көре алады.
+      </p>
+
+      <input
+        id="hallPlanFile"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+      >
+
+      <button
+        onclick="uploadHallPlan()"
+        id="uploadHallPlanBtn">
+        Зал жоспарын жүктеу
+      </button>
+
+      <div
+        id="hallPlanMsg"
+        class="admin-msg">
+      </div>
+
+      <div
+        id="hallPlanPreview"
+        class="hall-plan-preview"
+        style="display:none">
+
+        <img
+          id="hallPlanPreviewImg"
+          alt="Зал жоспары">
+
+      </div>
+
+    </div>
+
+
+    <div class="admin-card">
+
+      <h2
+        class="section-title"
+        id="excelTitle">
+        Excel жүктеу
+      </h2>
+
+      <p
+        class="muted small"
+        id="excelDescription">
+        Excel бағандары:
+        <b>Аты-жөні</b> және
+        <b>Үстел №</b>.
+        .xlsx, .xls немесе .csv болады.
+      </p>
+
+      <input
+        id="excelFile"
+        type="file"
+        accept=".xlsx,.xls,.csv"
+      >
+
+      <button
+        onclick="importExcel()"
+        id="excelUploadBtn">
+        Excel-ден қонақтарды қосу
+      </button>
+
+      <div
+        id="importMsg"
+        class="admin-msg">
+      </div>
+
+    </div>
+
+
+    <div class="admin-card">
+
+      <h2
+        class="section-title"
+        id="manualGuestTitle">
+        Қонақты қолмен қосу
+      </h2>
+
+      <input
+        id="n"
+        placeholder="Аты-жөні"
+      >
+
+      <input
+        id="t"
+        placeholder="Үстел №"
+      >
+
+      <button
+        onclick="addGuest()"
+        id="addGuestBtn">
+        Қосу
+      </button>
+
+      <div
+        id="actionMsg"
+        class="admin-msg">
+      </div>
+
+    </div>
+
+
+    <div class="admin-card guest-search-card">
+
+      <h2
+        class="section-title"
+        id="guestSearchTitle">
+        Қонақты іздеу
+      </h2>
+
+      <p
+        class="muted small"
+        id="guestSearchDescription">
+        Аты-жөнін жазыңыз.
+        Табылған қонақтың аты мен үстел нөмірін өзгертуге болады.
+      </p>
+
+      <input
+        id="guestSearch"
+        placeholder="Қонақтың аты-жөні"
+        autocomplete="off"
+        oninput="filterGuests()"
+      >
+
+      <div
+        id="searchMsg"
+        class="admin-msg">
+      </div>
+
+    </div>
+
+
+    <div class="list-head">
+
+      <h2 class="section-title">
+        <span id="guestListTitle">Қонақтар</span>
+        <span id="guestCount"></span>
+      </h2>
+
+    </div>
+
+    <div
+      id="list"
+      class="guest-list">
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<script>
+
+const adminTranslations = {
+
+  kk: {
+    guestPage: "Қонақ беті",
+    loginTitle: "Admin кіру",
+    loginDescription: "Supabase-та жасаған email мен парольді енгізіңіз.",
+    password: "Пароль",
+    login: "Кіру",
+
+    eventsTitle: "Іс-шаралар",
+    eventsDescription: "Іс-шараны таңдаңыз немесе жаңасын құрыңыз.",
+    logout: "Шығу",
+
+    eventLabel: "Іс-шара",
+    eventName: "Іс-шара атауы",
+    createEvent: "+ Жаңа іс-шара құру",
+
+    selectedEvent: "ТАҢДАЛҒАН ІС-ШАРА",
+    copyLink: "Қонақ сілтемесін көшіру",
+    saveQR: "QR-кодты сақтау",
+    deleteEvent: "Іс-шараны өшіру",
+
+    hallPlan: "Зал жоспары",
+    hallPlanDescription:
+      "Таңдалған іс-шараға зал жоспарының суретін жүктеңіз. Қонақ үстелін тапқан кезде осы жоспарды көре алады.",
+    uploadHallPlan: "Зал жоспарын жүктеу",
+
+    excel: "Excel жүктеу",
+    excelDescription:
+      "Excel бағандары: Аты-жөні және Үстел №. .xlsx, .xls немесе .csv болады.",
+    excelUpload: "Excel-ден қонақтарды қосу",
+
+    manualGuest: "Қонақты қолмен қосу",
+    guestName: "Аты-жөні",
+    table: "Үстел №",
+    add: "Қосу",
+
+    searchTitle: "Қонақты іздеу",
+    searchDescription:
+      "Аты-жөнін жазыңыз. Табылған қонақтың аты мен үстел нөмірін өзгертуге болады.",
+    searchPlaceholder: "Қонақтың аты-жөні",
+
+    guests: "Қонақтар"
+  },
+
+
+  ru: {
+    guestPage: "Страница гостя",
+    loginTitle: "Вход в Admin",
+    loginDescription: "Введите email и пароль администратора.",
+    password: "Пароль",
+    login: "Войти",
+
+    eventsTitle: "Мероприятия",
+    eventsDescription: "Выберите мероприятие или создайте новое.",
+    logout: "Выйти",
+
+    eventLabel: "Мероприятие",
+    eventName: "Название мероприятия",
+    createEvent: "+ Создать мероприятие",
+
+    selectedEvent: "ВЫБРАННОЕ МЕРОПРИЯТИЕ",
+    copyLink: "Скопировать ссылку для гостей",
+    saveQR: "Сохранить QR-код",
+    deleteEvent: "Удалить мероприятие",
+
+    hallPlan: "План зала",
+    hallPlanDescription:
+      "Загрузите план зала для выбранного мероприятия. Гость сможет увидеть его после поиска своего стола.",
+    uploadHallPlan: "Загрузить план зала",
+
+    excel: "Загрузка Excel",
+    excelDescription:
+      "Столбцы Excel: Аты-жөні и Үстел №. Поддерживаются .xlsx, .xls и .csv.",
+    excelUpload: "Добавить гостей из Excel",
+
+    manualGuest: "Добавить гостя вручную",
+    guestName: "Имя и фамилия",
+    table: "Стол №",
+    add: "Добавить",
+
+    searchTitle: "Поиск гостя",
+    searchDescription:
+      "Введите имя гостя. Имя и номер стола найденного гостя можно изменить.",
+    searchPlaceholder: "Имя гостя",
+
+    guests: "Гости"
+  },
+
+
+  en: {
+    guestPage: "Guest page",
+    loginTitle: "Admin Login",
+    loginDescription: "Enter your administrator email and password.",
+    password: "Password",
+    login: "Log in",
+
+    eventsTitle: "Events",
+    eventsDescription: "Select an event or create a new one.",
+    logout: "Log out",
+
+    eventLabel: "Event",
+    eventName: "Event name",
+    createEvent: "+ Create new event",
+
+    selectedEvent: "SELECTED EVENT",
+    copyLink: "Copy guest link",
+    saveQR: "Save QR code",
+    deleteEvent: "Delete event",
+
+    hallPlan: "Floor plan",
+    hallPlanDescription:
+      "Upload a floor plan for the selected event. Guests can view it after finding their table.",
+    uploadHallPlan: "Upload floor plan",
+
+    excel: "Upload Excel",
+    excelDescription:
+      "Excel columns: Аты-жөні and Үстел №. .xlsx, .xls and .csv are supported.",
+    excelUpload: "Add guests from Excel",
+
+    manualGuest: "Add guest manually",
+    guestName: "Full name",
+    table: "Table №",
+    add: "Add",
+
+    searchTitle: "Search guest",
+    searchDescription:
+      "Enter the guest's name. You can edit the name and table number of the guest found.",
+    searchPlaceholder: "Guest name",
+
+    guests: "Guests"
+  }
+
+};
+
+
+function setAdminLanguage(lang) {
+
+  localStorage.setItem("alem_admin_language", lang);
+
+  document.documentElement.lang = lang;
+
+  const t = adminTranslations[lang];
+
+
+  document.getElementById("guestPageLink").textContent = t.guestPage;
+
+  document.getElementById("loginTitle").textContent = t.loginTitle;
+  document.getElementById("loginDescription").textContent = t.loginDescription;
+
+  document.getElementById("password").placeholder = t.password;
+  document.getElementById("loginBtn").textContent = t.login;
+
+
+  document.getElementById("eventsTitle").textContent = t.eventsTitle;
+  document.getElementById("eventsDescription").textContent = t.eventsDescription;
+  document.getElementById("logoutBtn").textContent = t.logout;
+
+
+  document.getElementById("eventLabel").textContent = t.eventLabel;
+  document.getElementById("eventName").placeholder = t.eventName;
+  document.getElementById("createEventBtn").textContent = t.createEvent;
+
+
+  document.getElementById("selectedEventLabel").textContent = t.selectedEvent;
+  document.getElementById("copyGuestLinkBtn").textContent = t.copyLink;
+  document.getElementById("downloadQRBtn").textContent = t.saveQR;
+  document.getElementById("deleteEventBtn").textContent = t.deleteEvent;
+
+
+  document.getElementById("hallPlanTitle").textContent = t.hallPlan;
+  document.getElementById("hallPlanDescription").textContent =
+    t.hallPlanDescription;
+
+  document.getElementById("uploadHallPlanBtn").textContent =
+    t.uploadHallPlan;
+
+
+  document.getElementById("excelTitle").textContent = t.excel;
+  document.getElementById("excelDescription").textContent =
+    t.excelDescription;
+
+  document.getElementById("excelUploadBtn").textContent =
+    t.excelUpload;
+
+
+  document.getElementById("manualGuestTitle").textContent =
+    t.manualGuest;
+
+  document.getElementById("n").placeholder = t.guestName;
+  document.getElementById("t").placeholder = t.table;
+  document.getElementById("addGuestBtn").textContent = t.add;
+
+
+  document.getElementById("guestSearchTitle").textContent =
+    t.searchTitle;
+
+  document.getElementById("guestSearchDescription").textContent =
+    t.searchDescription;
+
+  document.getElementById("guestSearch").placeholder =
+    t.searchPlaceholder;
+
+
+  document.getElementById("guestListTitle").textContent =
+    t.guests;
+
+
+  document
+    .querySelectorAll(".lang-switcher button")
+    .forEach(btn => btn.classList.remove("active"));
+
+  document
+    .getElementById("admin-lang-" + lang)
+    .classList.add("active");
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const savedLanguage =
+    localStorage.getItem("alem_admin_language") ||
+    localStorage.getItem("alem_language") ||
+    "kk";
+
+  setAdminLanguage(savedLanguage);
+
+});
+
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+<script src="admin.js?v=5"></script>
+
+</body>
+</html>
