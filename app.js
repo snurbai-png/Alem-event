@@ -54,10 +54,10 @@ async function findGuest() {
       <div style="font-size:64px;margin:12px 0;">№${guest.table_number}</div>
       <div>Сіздің үстеліңіз</div>
     `;
-  } catch (error) {
-    console.error(error);
-    r.innerHTML = 'Дерекқорға қосылу мүмкін болмады.';
-  }
+} catch (error) {
+  console.error(error);
+  r.innerHTML = 'Қате: ' + error.message;
+}
 }
 
 document.addEventListener('DOMContentLoaded', () => {
