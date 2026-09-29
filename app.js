@@ -24,7 +24,7 @@ async function findGuest() {
 
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/rpc/find_guest`,
+     `${SUPABASE_URL}rpc/find_guest`
       {
         method: 'POST',
         headers,
