@@ -1,3 +1,105 @@
+const adminMessages = {
+  kk: {
+    enterLogin: "Email мен парольді енгізіңіз.",
+    loggingIn: "Кіру…",
+    wrongLogin: "Email немесе пароль қате.",
+    noEvents: "Іс-шара жоқ",
+    eventsLoadError: "Іс-шараларды жүктеу мүмкін болмады.",
+    enterEventName: "Іс-шара атауын жазыңыз.",
+    creating: "Құрылуда…",
+    eventCreated: "Іс-шара құрылды ✓",
+    currentPlan: "Қазіргі зал жоспары ✓",
+    noPlan: "Бұл іс-шараға зал жоспары әлі жүктелмеген.",
+    selectEvent: "Алдымен іс-шараны таңдаңыз.",
+    selectPlan: "Зал жоспарының суретін таңдаңыз.",
+    selectImage: "Сурет файлын таңдаңыз.",
+    uploadingPlan: "Зал жоспары жүктелуде…",
+    planUploaded: "Зал жоспары сәтті жүктелді ✓",
+    linkCopied: "Қонақ сілтемесі көшірілді ✓",
+    save: "Сақтау",
+    edit: "Өзгерту",
+    delete: "Өшіру",
+    guestNotFound: "Қонақ табылмады",
+    changesSaved: "Өзгеріс сақталды ✓",
+    adding: "Қосылуда…",
+    guestAdded: "Қонақ қосылды ✓",
+    addError: "Қосу мүмкін болмады.",
+    chooseExcel: "Excel файлын таңдаңыз.",
+    readingFile: "Файл оқылуда…",
+    deleteGuest: "Қонақты өшіру керек пе?",
+    deleteError: "Өшіру мүмкін болмады."
+  },
+
+  ru: {
+    enterLogin: "Введите email и пароль.",
+    loggingIn: "Вход…",
+    wrongLogin: "Неверный email или пароль.",
+    noEvents: "Нет мероприятий",
+    eventsLoadError: "Не удалось загрузить мероприятия.",
+    enterEventName: "Введите название мероприятия.",
+    creating: "Создание…",
+    eventCreated: "Мероприятие создано ✓",
+    currentPlan: "Текущий план зала ✓",
+    noPlan: "Для этого мероприятия план зала ещё не загружен.",
+    selectEvent: "Сначала выберите мероприятие.",
+    selectPlan: "Выберите изображение плана зала.",
+    selectImage: "Выберите файл изображения.",
+    uploadingPlan: "План зала загружается…",
+    planUploaded: "План зала успешно загружен ✓",
+    linkCopied: "Ссылка для гостей скопирована ✓",
+    save: "Сохранить",
+    edit: "Изменить",
+    delete: "Удалить",
+    guestNotFound: "Гость не найден",
+    changesSaved: "Изменения сохранены ✓",
+    adding: "Добавление…",
+    guestAdded: "Гость добавлен ✓",
+    addError: "Не удалось добавить.",
+    chooseExcel: "Выберите файл Excel.",
+    readingFile: "Чтение файла…",
+    deleteGuest: "Удалить гостя?",
+    deleteError: "Не удалось удалить."
+  },
+
+  en: {
+    enterLogin: "Enter your email and password.",
+    loggingIn: "Logging in…",
+    wrongLogin: "Incorrect email or password.",
+    noEvents: "No events",
+    eventsLoadError: "Unable to load events.",
+    enterEventName: "Enter the event name.",
+    creating: "Creating…",
+    eventCreated: "Event created ✓",
+    currentPlan: "Current floor plan ✓",
+    noPlan: "No floor plan has been uploaded for this event yet.",
+    selectEvent: "Select an event first.",
+    selectPlan: "Select a floor plan image.",
+    selectImage: "Select an image file.",
+    uploadingPlan: "Uploading floor plan…",
+    planUploaded: "Floor plan uploaded successfully ✓",
+    linkCopied: "Guest link copied ✓",
+    save: "Save",
+    edit: "Edit",
+    delete: "Delete",
+    guestNotFound: "Guest not found",
+    changesSaved: "Changes saved ✓",
+    adding: "Adding…",
+    guestAdded: "Guest added ✓",
+    addError: "Unable to add guest.",
+    chooseExcel: "Select an Excel file.",
+    readingFile: "Reading file…",
+    deleteGuest: "Delete this guest?",
+    deleteError: "Unable to delete."
+  }
+};
+
+function msg(key) {
+  const lang = localStorage.getItem("alem_admin_language") ||
+               localStorage.getItem("alem_language") ||
+               "kk";
+
+  return adminMessages[lang]?.[key] || adminMessages.kk[key] || "";
+}
 const SUPABASE_URL='https://dulfanhffndctpznmfyb.supabase.co';
 const SUPABASE_KEY='sb_publishable_JZijzOktaD4oqGPtChle5w_QAnM562L';
 let accessToken=sessionStorage.getItem('alem_admin_token')||'';
