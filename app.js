@@ -49,11 +49,44 @@ async function findGuest() {
 
     const guest = rows[0];
 
-    r.innerHTML = `
-      <div>Қош келдіңіз, ${guest.full_name}</div>
-      <div style="font-size:64px;margin:12px 0;">№${guest.table_number}</div>
-      <div>Сіздің үстеліңіз</div>
-    `;
+  r.innerHTML = `
+  <div>Қош келдіңіз, ${guest.full_name}</div>
+
+  <div style="font-size:64px;margin:12px 0;">
+    №${guest.table_number}
+  </div>
+
+  <div>Сіздің үстеліңіз</div>
+
+  <button
+    type="button"
+    onclick="document.getElementById('hallMap').style.display='block'"
+    style="
+      width:100%;
+      margin-top:20px;
+      padding:16px;
+      border:1px solid #89976b;
+      border-radius:14px;
+      background:white;
+      color:#75845c;
+      font-size:18px;
+      font-weight:bold;
+    ">
+    Үстелімді картадан көрсету
+  </button>
+
+  <div id="hallMap" style="display:none; margin-top:25px;">
+    <div style="font-size:28px; margin-bottom:18px;">
+      Сіздің үстеліңіз — №${guest.table_number}
+    </div>
+
+    <img
+      src="hall-plan.png"
+      alt="Зал картасы"
+      style="width:100%; border-radius:18px;"
+    >
+  </div>
+`;
 } catch (error) {
   console.error(error);
   r.innerHTML = 'Қате: ' + error.message;
