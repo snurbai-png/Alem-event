@@ -24,7 +24,7 @@ async function findGuest() {
 
   try {
     const res = await fetch(
-    'https://dulfanhffndctpznmfyb.supabase.co/rest/v1/rpc/find_guest'
+    'https://dulfanhffndctpznmfyb.supabase.co/rest/v1/rpc/find_guest',
       {
         method: 'POST',
         headers,
