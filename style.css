@@ -161,3 +161,20 @@
   opacity:0;
   cursor:pointer;
 }
+/* Date picker: native iPhone text-ті жасыру */
+.date-field #eventDate{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  cursor:pointer;
+  -webkit-appearance:none;
+  appearance:none;
+}
+
+.date-field #dateLabel{
+  position:relative;
+  z-index:1;
+  pointer-events:none;
+}
