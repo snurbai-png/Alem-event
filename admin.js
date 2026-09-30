@@ -156,8 +156,8 @@ function guestUrl(){return `${location.origin}${location.pathname.replace(/admin
 function makeQR(){const box=$('qrcode');box.innerHTML='';new QRCode(box,{text:guestUrl(),width:190,height:190,correctLevel:QRCode.CorrectLevel.M})}
 async function copyGuestLink(){try{await navigator.clipboard.writeText(guestUrl());$('eventMsg').textContent='Қонақ сілтемесі көшірілді ✓'}catch(e){prompt('Сілтемені көшіріңіз:',guestUrl())}}
 async function downloadQR() {
-  const img = $('qrcode')?.querySelector('img');
   const canvas = $('qrcode')?.querySelector('canvas');
+  const img = $('qrcode')?.querySelector('img');
 
   let src = '';
 
@@ -172,39 +172,45 @@ async function downloadQR() {
     return;
   }
 
-  try {
-    const response = await fetch(src);
-    const blob = await response.blob();
+  // iPhone-да QR суретін жеке бетте ашамыз.
+  // Суретті ұзақ басып → «Сохранить в Фото»
+  const page = window.open('', '_blank');
 
-    const file = new File(
-      [blob],
-      `ALEM_EVENT_${currentEvent?.slug || 'QR'}.png`,
-      { type: 'image/png' }
-    );
-
-    if (navigator.share && navigator.canShare?.({ files: [file] })) {
-      await navigator.share({
-        files: [file],
-        title: 'ALEM EVENT QR'
-      });
-      return;
-    }
-
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = file.name;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-
-  } catch (e) {
-    console.error(e);
-
-    // iPhone-да QR суретін жаңа бетте ашамыз
-    window.open(src, '_blank');
+  if (!page) {
+    alert('Жаңа терезені ашуға рұқсат беріңіз.');
+    return;
   }
+
+  page.document.write(`
+    <!doctype html>
+    <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>ALEM EVENT QR</title>
+        <style>
+          body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+          }
+
+          img {
+            width: 85%;
+            max-width: 600px;
+            height: auto;
+          }
+        </style>
+      </head>
+      <body>
+        <img src="${src}" alt="ALEM EVENT QR">
+      </body>
+    </html>
+  `);
+
+  page.document.close();
 }
 async function deleteEvent(){
   if(!currentEvent||!eventId)return;
