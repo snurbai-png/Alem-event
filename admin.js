@@ -155,7 +155,57 @@ async function uploadHallPlan(){
 function guestUrl(){return `${location.origin}${location.pathname.replace(/admin\.html.*$/,'index.html')}?event=${encodeURIComponent(currentEvent.slug)}`}
 function makeQR(){const box=$('qrcode');box.innerHTML='';new QRCode(box,{text:guestUrl(),width:190,height:190,correctLevel:QRCode.CorrectLevel.M})}
 async function copyGuestLink(){try{await navigator.clipboard.writeText(guestUrl());$('eventMsg').textContent='Қонақ сілтемесі көшірілді ✓'}catch(e){prompt('Сілтемені көшіріңіз:',guestUrl())}}
-function downloadQR(){const img=$('qrcode').querySelector('img');const canvas=$('qrcode').querySelector('canvas');const src=img?.src||canvas?.toDataURL('image/png');if(!src)return;const a=document.createElement('a');a.href=src;a.download=`ALEM_EVENT_${currentEvent.slug}_QR.png`;a.click()}
+async function downloadQR() {
+  const img = $('qrcode')?.querySelector('img');
+  const canvas = $('qrcode')?.querySelector('canvas');
+
+  let src = '';
+
+  if (canvas) {
+    src = canvas.toDataURL('image/png');
+  } else if (img?.src) {
+    src = img.src;
+  }
+
+  if (!src) {
+    alert('QR-код табылмады.');
+    return;
+  }
+
+  try {
+    const response = await fetch(src);
+    const blob = await response.blob();
+
+    const file = new File(
+      [blob],
+      `ALEM_EVENT_${currentEvent?.slug || 'QR'}.png`,
+      { type: 'image/png' }
+    );
+
+    if (navigator.share && navigator.canShare?.({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: 'ALEM EVENT QR'
+      });
+      return;
+    }
+
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+
+  } catch (e) {
+    console.error(e);
+
+    // iPhone-да QR суретін жаңа бетте ашамыз
+    window.open(src, '_blank');
+  }
+}
 async function deleteEvent(){
   if(!currentEvent||!eventId)return;
   const ok=confirm(`«${currentEvent.name}» іс-шарасын өшіру керек пе?\n\nОсы іс-шарадағы барлық қонақ та өшеді. Бұл әрекетті қайтару мүмкін емес.`);
