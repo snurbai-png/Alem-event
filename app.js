@@ -5,7 +5,34 @@ const headers = {
   apikey: SUPABASE_KEY,
   'Content-Type': 'application/json'
 };
+async function loadEventName() {
+  const params = new URLSearchParams(window.location.search);
+  const eventSlug = params.get('event');
 
+  if (!eventSlug) return;
+
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/events?slug=eq.${encodeURIComponent(eventSlug)}&select=name&limit=1`,
+      { headers }
+    );
+
+    if (!res.ok) return;
+
+    const rows = await res.json();
+    if (!rows.length) return;
+
+    const el = document.getElementById('eventName');
+
+    if (el) {
+      el.textContent = rows[0].name;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadEventName);
 function currentLanguage() {
   return localStorage.getItem('alem_language') || 'kk';
 }
