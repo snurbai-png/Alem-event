@@ -194,3 +194,14 @@
     font-size: 42px;
   }
 }
+/* Event name input fix */
+#eventName {
+  font-size: 28px !important;
+  font-family: Arial, sans-serif !important;
+  line-height: 1.2 !important;
+}
+
+#eventName::placeholder {
+  font-size: 28px !important;
+  font-family: Arial, sans-serif !important;
+}
