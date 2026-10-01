@@ -13,14 +13,20 @@ async function loadEventName() {
 
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/events?slug=eq.${encodeURIComponent(eventSlug)}&select=name&limit=1`,
-      { headers }
+      `${SUPABASE_URL}/rest/v1/rpc/get_event_name`,
+      {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          p_event_slug: eventSlug
+        })
+      }
     );
 
     if (!res.ok) return;
 
     const rows = await res.json();
-    if (!rows.length) return;
+    if (!rows || !rows.length) return;
 
     const el = document.getElementById('eventName');
 
