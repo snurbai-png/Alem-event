@@ -1,4 +1,4 @@
-const SUPABASE_URL = 'https://dulfanhffndctpznmfyb.supabase.co/rest/v1/';
+const SUPABASE_URL = 'https://dulfanhffndctpznmfyb.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_JZijzOktaD4oqGPtChle5w_QAnM562L';
 
 const headers = {
