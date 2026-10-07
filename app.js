@@ -133,11 +133,7 @@ async function findGuest() {
         №${guest.table_number}
       </div>
 
-      <div>${t.yourTable}</div>
-
-      <button
-        type="button"
-        onclick="document.getElementById('hallMap').style.display='block'"
+      <div>${t.yourTable}</div> 
         style="
           width:100%;
           margin-top:20px;
@@ -152,7 +148,7 @@ async function findGuest() {
         ${t.showMap}
       </button>
 
-      <div id="hallMap" style="display:none; margin-top:25px;">
+   <div id="hallMap" style="display:block; margin-top:25px;">
 
         <div style="font-size:28px; margin-bottom:18px;">
           ${t.mapTitle} — №${guest.table_number}
