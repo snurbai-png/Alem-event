@@ -134,7 +134,7 @@ async function findGuest() {
       </div>
 
       <div>${t.yourTable}</div> 
-      
+      <div id="hallMap" style="display:block; margin-top:25px;">
 
    <div id="hallMap" style="display:block; margin-top:25px;">
 
