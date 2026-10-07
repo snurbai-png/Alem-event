@@ -134,19 +134,7 @@ async function findGuest() {
       </div>
 
       <div>${t.yourTable}</div> 
-        style="
-          width:100%;
-          margin-top:20px;
-          padding:16px;
-          border:1px solid #89976b;
-          border-radius:14px;
-          background:white;
-          color:#75845c;
-          font-size:18px;
-          font-weight:bold;
-        ">
-        ${t.showMap}
-      </button>
+      
 
    <div id="hallMap" style="display:block; margin-top:25px;">
 
