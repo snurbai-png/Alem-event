@@ -579,29 +579,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 </script>
-
-
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
 <script src="admin.js?v=5"></script>
 
-  <script>
-function updateDateLabel() {
-  const input = document.getElementById('eventDate');
-  const label = document.getElementById('dateLabel');
-
-  if (!input || !label) return;
-
-  if (input.value) {
-    const [year, month, day] = input.value.split('-');
-    label.textContent = `${day}.${month}.${year}`;
-  } else {
-    label.textContent = 'Күнді таңдаңыз';
-  }
-}
-</script>
-  
 </body>
 </html>
+  
+
