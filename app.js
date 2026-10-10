@@ -141,10 +141,10 @@ async function findGuest() {
         </div>
 
         <img
-          src="hall-plan.png"
-          alt="${t.mapAlt}"
-          style="width:100%; border-radius:18px;"
-        >
+  src="${SUPABASE_URL}/storage/v1/object/public/hall-plans/${encodeURIComponent(eventSlug)}"
+  alt="${t.mapAlt}"
+  style="width:100%; border-radius:18px;"
+>
 
       </div>
     `;
