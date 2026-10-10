@@ -132,11 +132,9 @@ async function findGuest() {
       <div style="font-size:64px;margin:12px 0;">
         №${guest.table_number}
       </div>
+<div>${t.yourTable}</div>
 
-      <div>${t.yourTable}</div> 
-      <div id="hallMap" style="display:block; margin-top:25px;">
-
-   <div id="hallMap" style="display:block; margin-top:25px;">
+<div id="hallMap" style="display:block; margin-top:25px;">
 
         <div style="font-size:28px; margin-bottom:18px;">
           ${t.mapTitle} — №${guest.table_number}
