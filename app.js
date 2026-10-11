@@ -25,14 +25,19 @@ async function loadEventName() {
 
     if (!res.ok) return;
 
-    const rows = await res.json();
-    if (!rows || !rows.length) return;
+    const data = await res.json();
 
-    const el = document.getElementById('eventName');
+const eventName = Array.isArray(data)
+  ? data[0]?.name
+  : typeof data === 'string'
+    ? data
+    : data?.name;
 
-    if (el) {
-      el.textContent = rows[0].name;
-    }
+const el = document.getElementById('guestEventName');
+
+if (el && eventName) {
+  el.textContent = eventName;
+}
   } catch (error) {
     console.error(error);
   }
